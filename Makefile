@@ -1,6 +1,7 @@
 NAME = scop
 
-SRCS = main.cpp\
+SRCS = SRCS/main.cpp\
+		headers/scopApp.cpp\
 
 OBJS = $(SRCS:.cpp=.o)
 
@@ -11,8 +12,7 @@ LDFLAGS = -lglfw -lvulkan -ldl -lpthread -lX11 -lXxf86vm -lXrandr -lXi
 all: 		$(NAME)
 
 $(NAME):	$(OBJS)
-		g++ $(CFLAGS) -o $(NAME) main.cpp $(LDFLAGS)
-
+		g++ $(CFLAGS) -o $(NAME) $(SRCS) $(LDFLAGS)
 
 test: 		$(NAME)
 		./$(NAME)
@@ -22,7 +22,6 @@ clean:
 
 fclean:		clean
 		rm -f $(NAME)
-
 
 re:		fclean all
 
