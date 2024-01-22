@@ -5,6 +5,16 @@
 const uint32_t WIDTH = 800;
 const uint32_t HEIGHT = 600;
 
+const std::vector<const char *>	validationLayers = {
+	"VK_LAYER_KHRONOS_validation"
+};
+
+#ifdef NDEBUG
+	constexpr bool	enableValidationLayers = false;
+#else
+	constexpr bool	enableValidationLayers = true;
+#endif
+
 class	scopApp {
 	public:
 		void	run();
@@ -16,4 +26,5 @@ class	scopApp {
 		void	initVulkan();
 		void	mainLoop();
 		void	cleanup ();
+		bool	checkValidationLayerSupport();
 };

@@ -7,6 +7,7 @@
 #include <stdexcept>
 #include <functional>
 #include <cstdlib>
+#include <cstring>
 #include <vector>
 
 #include "scopApp.hpp"
