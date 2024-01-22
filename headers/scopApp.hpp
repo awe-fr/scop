@@ -10,6 +10,8 @@ class	scopApp {
 		void	run();
 	private:
         GLFWwindow  *window;
+		VkInstance	instance;
+		void	createInstance();
         void    initWindow();
 		void	initVulkan();
 		void	mainLoop();
