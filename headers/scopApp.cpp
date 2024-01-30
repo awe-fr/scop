@@ -24,13 +24,10 @@ void	scopApp::createInstance() {
 	createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
 	createInfo.pApplicationInfo = &appInfo;
 
-	uint32_t    glfwExtensionCount = 0;
-	const char  **glfwExtensions;
+	auto	extensions = getRequieredExtensions();
 
-	glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
-
-	createInfo.enabledExtensionCount = glfwExtensionCount;
-	createInfo.ppEnabledExtensionNames = glfwExtensions;
+	createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
+	createInfo.ppEnabledExtensionNames = extensions.data();
 
 	if (enableValidationLayers) {
 			createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
@@ -43,15 +40,15 @@ void	scopApp::createInstance() {
 		throw std::runtime_error("Instance creation failed");
 	}
 
-	uint32_t    extensionCount = 0;
-	std::vector<VkExtensionProperties> extensions(extensionCount);
-	vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, extensions.data());
+	// uint32_t    extensionCount = 0;
+	// std::vector<VkExtensionProperties> extensions(extensionCount);
+	// vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, extensions.data());
 
-	std::cout << "Extensions available :" << std::endl;
+	// std::cout << "Extensions available :" << std::endl;
 
-	for (const auto& extension : extensions) {
-		std::cout << '\t' << extension.extensionName << std::endl;
-	}
+	// for (const auto& extension : extensions) {
+	// 	std::cout << '\t' << extension.extensionName << std::endl;
+	// }
 }
 
 void    scopApp::initWindow () {
@@ -104,4 +101,22 @@ bool	scopApp::checkValidationLayerSupport() {
 	}
 
 	return true;
+}
+
+std::vector<const char *> scopApp::getRequieredExtensions() {
+	uint32_t	glfwExtensionCount = 0;
+	const char	**glfwExtensions;
+	glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
+
+	std::vector<const char *>	extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
+
+	if (enableValidationLayers) {
+		extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+	}
+	return extensions;
+}
+
+static	VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void *pUserData) {
+	std::cerr << "validation layer: " << pCallbackData->pMessage << std::endl;
+	return VK_FALSE;
 }

@@ -27,4 +27,6 @@ class	scopApp {
 		void	mainLoop();
 		void	cleanup ();
 		bool	checkValidationLayerSupport();
+		std::vector<const char *>	getRequieredExtensions();
+		static	VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void *pUserData);
 };
