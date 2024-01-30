@@ -9,5 +9,6 @@
 #include <cstdlib>
 #include <cstring>
 #include <vector>
+#include <optional>
 
 #include "scopApp.hpp"
