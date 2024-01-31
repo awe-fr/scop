@@ -10,5 +10,9 @@
 #include <cstring>
 #include <vector>
 #include <optional>
+#include <set>
+#include <algorithm>
+#include <limits>
+#include <cstdint>
 
 #include "scopApp.hpp"
