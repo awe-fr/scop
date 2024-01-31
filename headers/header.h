@@ -14,5 +14,6 @@
 #include <algorithm>
 #include <limits>
 #include <cstdint>
+#include <fstream>
 
 #include "scopApp.hpp"

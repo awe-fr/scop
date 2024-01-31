@@ -78,4 +78,6 @@ class	scopApp {
 		void createSwapChain();
 		void createImageViews();
 		void createGraphicsPipeline();
+		static std::vector<char> readFile(const std::string& filename);
+		VkShaderModule createShaderModule(const std::vector<char>& code);
 };
