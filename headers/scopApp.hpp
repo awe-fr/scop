@@ -54,7 +54,14 @@ class	scopApp {
 		VkFormat swapChainImageFormat;
 		VkExtent2D swapChainExtent;
 		std::vector<VkImageView> swapChainImageViews;
+		VkRenderPass renderPass;
 		VkPipelineLayout pipelineLayout;
+		VkPipeline graphicsPipeline;
+		std::vector<VkFramebuffer> swapChainFramebuffers;
+		VkCommandPool commandPool;
+		std::vector<VkCommandBuffer> commandBuffers;
+		VkSemaphore imageAvailableSemaphore;
+		VkSemaphore renderFinishedSemaphore;
 
 		void	createInstance();
         void    initWindow();
@@ -81,4 +88,10 @@ class	scopApp {
 		void createGraphicsPipeline();
 		static std::vector<char> readFile(const std::string& filename);
 		VkShaderModule createShaderModule(const std::vector<char>& code);
+		void createRenderPass();
+		void createFramebuffers();
+		void createCommandPool();
+		void createCommandBuffers();
+		void drawFrame();
+		void createSemaphores();
 };
