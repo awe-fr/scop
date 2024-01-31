@@ -54,6 +54,7 @@ class	scopApp {
 		VkFormat swapChainImageFormat;
 		VkExtent2D swapChainExtent;
 		std::vector<VkImageView> swapChainImageViews;
+		VkPipelineLayout pipelineLayout;
 
 		void	createInstance();
         void    initWindow();
