@@ -67,6 +67,7 @@ class	scopApp {
 		std::vector<VkFence> inFlightFences;
 		std::vector<VkFence> imagesInFlight;
 		size_t currentFrame = 0;
+		bool framebufferResized = false;
 
 		void	createInstance();
         void    initWindow();
@@ -99,4 +100,7 @@ class	scopApp {
 		void createCommandBuffers();
 		void drawFrame();
 		void createSyncObjects();
+		void recreateSwapChain();
+		void cleanupSwapChain();
+		static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
 };
