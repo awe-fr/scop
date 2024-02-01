@@ -15,5 +15,7 @@
 #include <limits>
 #include <cstdint>
 #include <fstream>
+#include <glm/glm.hpp>
+#include <array>
 
 #include "scopApp.hpp"
