@@ -48,6 +48,9 @@
         "typeinfo": "cpp",
         "optional": "cpp",
         "set": "cpp",
-        "fstream": "cpp"
+        "fstream": "cpp",
+        "chrono": "cpp",
+        "ctime": "cpp",
+        "ratio": "cpp"
     },
 }

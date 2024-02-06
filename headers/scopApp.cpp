@@ -82,11 +82,15 @@ void    scopApp::initVulkan () {
 	this->createSwapChain();
 	this->createImageViews();
 	this->createRenderPass();
+	this->createDescriptorSetLayout();
 	this->createGraphicsPipeline();
 	this->createFramebuffers();
 	this->createCommandPool();
+	this->createDescriptorPool();
+	this->createUniformBuffers();
+	this->createDescriptorSets();
 	this->createVertexBuffer();
-	createIndexBuffer();
+	this->createIndexBuffer();
 	this->createCommandBuffers();
 	this->createSyncObjects();
 }
@@ -102,6 +106,10 @@ void    scopApp::mainLoop () {
 
 void    scopApp::cleanup () {
 	cleanupSwapChain();
+
+	// vkDestroyDescriptorPool(device, descriptorPool, nullptr);
+
+	vkDestroyDescriptorSetLayout(device, descriptorSetLayout, nullptr);
 
 	vkDestroyBuffer(device, indexBuffer, nullptr);
     vkFreeMemory(device, indexBufferMemory, nullptr);
@@ -544,7 +552,7 @@ void scopApp::createGraphicsPipeline() {
 	rasterizer.lineWidth = 1.0f;
 
 	rasterizer.cullMode = VK_CULL_MODE_BACK_BIT;
-	rasterizer.frontFace = VK_FRONT_FACE_CLOCKWISE;
+	rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
 
 	rasterizer.depthBiasEnable = VK_FALSE;
 	rasterizer.depthBiasConstantFactor = 0.0f;
@@ -593,8 +601,8 @@ void scopApp::createGraphicsPipeline() {
 
 	VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
 	pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-	pipelineLayoutInfo.setLayoutCount = 0;
-	pipelineLayoutInfo.pSetLayouts = nullptr;
+	pipelineLayoutInfo.setLayoutCount = 1;
+	pipelineLayoutInfo.pSetLayouts = &descriptorSetLayout;
 	pipelineLayoutInfo.pushConstantRangeCount = 0;
 	pipelineLayoutInfo.pPushConstantRanges = nullptr;
 
@@ -747,6 +755,7 @@ void scopApp::createCommandPool() {
 }
 
 void scopApp::createCommandBuffers() {
+	
     commandBuffers.resize(swapChainFramebuffers.size());
 
 	VkCommandBufferAllocateInfo allocInfo{};
@@ -789,6 +798,9 @@ void scopApp::createCommandBuffers() {
 		
 		vkCmdBindIndexBuffer(commandBuffers[i], indexBuffer, 0, VK_INDEX_TYPE_UINT16);
 
+		vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[i], 0, nullptr);
+		vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
+
 		vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
 		vkCmdEndRenderPass(commandBuffers[i]);
 
@@ -822,6 +834,8 @@ void scopApp::drawFrame() {
     }
 
 	imagesInFlight[imageIndex] = inFlightFences[currentFrame];
+
+	updateUniformBuffer(imageIndex);
 
 	VkSubmitInfo submitInfo{};
 	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -905,8 +919,14 @@ void scopApp::cleanupSwapChain() {
         vkDestroyFramebuffer(device, swapChainFramebuffers[i], nullptr);
     }
 
-    vkFreeCommandBuffers(device, commandPool, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
+	for (size_t i = 0; i < swapChainImages.size(); i++) {
+        vkDestroyBuffer(device, uniformBuffers[i], nullptr);
+        vkFreeMemory(device, uniformBuffersMemory[i], nullptr);
+    }
 
+	vkDestroyDescriptorPool(device, descriptorPool, nullptr);
+
+    vkFreeCommandBuffers(device, commandPool, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
     vkDestroyPipeline(device, graphicsPipeline, nullptr);
     vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
     vkDestroyRenderPass(device, renderPass, nullptr);
@@ -935,6 +955,9 @@ void scopApp::recreateSwapChain() {
     createRenderPass();
     createGraphicsPipeline();
     createFramebuffers();
+	createUniformBuffers();
+	createDescriptorPool();
+	createDescriptorSets();
     createCommandBuffers();
 }
 
@@ -1050,4 +1073,228 @@ void scopApp::createIndexBuffer() {
 
     vkDestroyBuffer(device, stagingBuffer, nullptr);
     vkFreeMemory(device, stagingBufferMemory, nullptr);
+}
+
+void scopApp::createDescriptorSetLayout() {
+	VkDescriptorSetLayoutBinding uboLayoutBinding{};
+    uboLayoutBinding.binding = 0;
+    uboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+    uboLayoutBinding.descriptorCount = 1;
+	uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+	uboLayoutBinding.pImmutableSamplers = nullptr;
+
+	VkDescriptorSetLayoutCreateInfo layoutInfo{};
+	layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+	layoutInfo.bindingCount = 1;
+	layoutInfo.pBindings = &uboLayoutBinding;
+
+	if (vkCreateDescriptorSetLayout(device, &layoutInfo, nullptr, &descriptorSetLayout) != VK_SUCCESS) {
+		throw std::runtime_error("echec de la creation d'un set de descripteurs!");
+	}
+}
+
+void scopApp::createUniformBuffers() {
+    VkDeviceSize bufferSize = sizeof(UniformBufferObject);
+
+    uniformBuffers.resize(swapChainImages.size());
+    uniformBuffersMemory.resize(swapChainImages.size());
+
+    for (size_t i = 0; i < swapChainImages.size(); i++) {
+        createBuffer(bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, uniformBuffers[i], uniformBuffersMemory[i]);
+    }
+	void* data;
+}
+
+void scopApp::updateUniformBuffer(uint32_t currentImage) {
+	static auto startTime = std::chrono::high_resolution_clock::now();
+
+    auto currentTime = std::chrono::high_resolution_clock::now();
+    float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
+
+	UniformBufferObject ubo{};
+	ubo.model = rotate_z(time, 90);
+
+	vec3 eye; eye.x = 2; eye.y = 2; eye.z = 2;
+	vec3 center; center.x = 0; center.y = 0; center.z = 0;
+	vec3 up; up.x = 0; up.y = 0; up.z = 1;
+	ubo.view = look_At(eye, center, up);
+
+	ubo.proj = perspective(45, swapChainExtent.width / (float) swapChainExtent.height, 0.1f, 10.0f);
+	ubo.proj.data[1][1] *= -1;
+
+	void* data;
+	vkMapMemory(device, uniformBuffersMemory[currentImage], 0, sizeof(ubo), 0, &data);
+		memcpy(data, &ubo, sizeof(ubo));
+	vkUnmapMemory(device, uniformBuffersMemory[currentImage]);
+}
+
+void scopApp::createDescriptorPool() {
+	VkDescriptorPoolSize poolSize{};
+	poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+	poolSize.descriptorCount = static_cast<uint32_t>(swapChainImages.size());
+
+	VkDescriptorPoolCreateInfo poolInfo{};
+	poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+	poolInfo.poolSizeCount = 1;
+	poolInfo.pPoolSizes = &poolSize;
+
+	poolInfo.maxSets = static_cast<uint32_t>(swapChainImages.size());
+
+	if (vkCreateDescriptorPool(device, &poolInfo, nullptr, &descriptorPool) != VK_SUCCESS) {
+		throw std::runtime_error("echec de la creation de la pool de descripteurs!");
+	}
+}
+
+void scopApp::createDescriptorSets() {
+	std::vector<VkDescriptorSetLayout> layouts(swapChainImages.size(), descriptorSetLayout);
+	VkDescriptorSetAllocateInfo allocInfo{};
+	allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+	allocInfo.descriptorPool = descriptorPool;
+	allocInfo.descriptorSetCount = static_cast<uint32_t>(swapChainImages.size());
+	allocInfo.pSetLayouts = layouts.data();
+
+	descriptorSets.resize(swapChainImages.size());
+	if (vkAllocateDescriptorSets(device, &allocInfo, descriptorSets.data()) != VK_SUCCESS) {
+		throw std::runtime_error("echec de l'allocation d'un set de descripteurs!");
+	}
+
+	for (size_t i = 0; i < swapChainImages.size(); i++) {
+		VkDescriptorBufferInfo bufferInfo{};
+		bufferInfo.buffer = uniformBuffers[i];
+		bufferInfo.offset = 0;
+		bufferInfo.range = sizeof(UniformBufferObject);
+
+		VkWriteDescriptorSet descriptorWrite{};
+		descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		descriptorWrite.dstSet = descriptorSets[i];
+		descriptorWrite.dstBinding = 0;
+		descriptorWrite.dstArrayElement = 0;
+
+		descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		descriptorWrite.descriptorCount = 1;
+
+		descriptorWrite.pBufferInfo = &bufferInfo;
+		descriptorWrite.pImageInfo = nullptr;
+		descriptorWrite.pTexelBufferView = nullptr;
+
+		vkUpdateDescriptorSets(device, 1, &descriptorWrite, 0, nullptr);
+	}
+
+}
+
+mat4	rotate_z(float time, float degree_angle) {
+	float angle_radians = degree_angle * M_PI / 180.0f;
+	angle_radians *= time;
+
+	mat4	matrix;
+
+	matrix.data[0][0] = cos(angle_radians);
+	matrix.data[0][1] = -sin(angle_radians);
+	matrix.data[0][2] = 0;
+	matrix.data[0][3] = 0;
+
+	matrix.data[1][0] = sin(angle_radians);
+	matrix.data[1][1] = cos(angle_radians);
+	matrix.data[1][2] = 0;
+	matrix.data[1][3] = 0;
+
+	matrix.data[2][0] = 0;
+	matrix.data[2][1] = 0;
+	matrix.data[2][2] = 1;
+	matrix.data[2][3] = 0;
+
+	matrix.data[3][0] = 0;
+	matrix.data[3][1] = 0;
+	matrix.data[3][2] = 0;
+	matrix.data[3][3] = 1;
+
+	return matrix;
+}
+
+mat4	look_At(vec3 eye, vec3 center, vec3 up) {
+	vec3 cal;
+	cal.x = center.x - eye.x;
+	cal.y = center.y - eye.y;
+	cal.z = center.z - eye.z;
+
+	vec3 f = normalize(cal);
+    vec3 r = normalize(cross(up, f));
+    vec3 u = cross(f, r);
+
+	mat4	matrix;
+
+    matrix.data[0][0] = r.x;
+    matrix.data[0][1] = u.x;
+    matrix.data[0][2] = -f.x;
+    matrix.data[0][3] = 0;
+
+    matrix.data[1][0] = r.y;
+    matrix.data[1][1] = u.y;
+    matrix.data[1][2] = -f.x;
+    matrix.data[1][3] = 0;
+
+    matrix.data[2][0] = r.z;
+    matrix.data[2][1] = u.z;
+    matrix.data[2][2] = -f.x;
+    matrix.data[2][3] = 0;
+
+    matrix.data[3][0] = -dot(r, eye);
+    matrix.data[3][1] = -dot(u, eye);
+    matrix.data[3][2] = dot(f, eye);
+    matrix.data[3][3] = 1;
+
+    return matrix;
+}
+
+vec3 cross(const vec3& a, const vec3& b) {
+	vec3 result;
+    result.x = a.y * b.z - a.z * b.y;
+    result.y = a.z * b.x - a.x * b.z;
+    result.z = a.x * b.y - a.y * b.x;
+
+	result.x = -result.x;
+    result.y = -result.y;
+    result.z = -result.z;
+    return result;
+}
+
+vec3 normalize(const vec3& v) {
+	vec3 result;
+    float length = std::sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+    result.x = v.x / length;
+    result.y = v.y / length;
+    result.z = v.z / length;
+    return result;
+}
+
+float dot(const vec3& a, const vec3& b) {
+    return a.x * b.x + a.y * b.y + a.z * b.z;
+}
+
+mat4	perspective(float FOV, float aspect, float zNear, float zFar) {
+	float tanHalfFovy = std::tan((FOV * M_PI / 180.0f) / 2.0f);
+
+	mat4	matrix;
+
+    matrix.data[0][0] = 1.0f / (aspect * tanHalfFovy);
+    matrix.data[0][1] = 0;
+    matrix.data[0][2] = 0;
+    matrix.data[0][3] = 0;
+
+    matrix.data[1][0] = 0;
+    matrix.data[1][1] = 1.0f / (tanHalfFovy);
+    matrix.data[1][2] = 0;
+    matrix.data[1][3] = 0;
+
+    matrix.data[2][0] = 0;
+    matrix.data[2][1] = 0;
+    matrix.data[2][2] = -(zFar + zNear) / (zFar - zNear);;
+    matrix.data[2][3] = -1;
+
+    matrix.data[3][0] = 0;
+    matrix.data[3][1] = 0;
+    matrix.data[3][2] = -(2.0f * zFar * zNear) / (zFar - zNear);
+    matrix.data[3][3] = 0;
+
+	return matrix;
 }

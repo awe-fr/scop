@@ -34,6 +34,18 @@ struct QueueFamilyIndices {
     }
 };
 
+struct vec2 {
+	float x;
+	float y;
+};
+
+struct vec3 {
+	float x;
+	float y;
+	float z;
+};
+
+
 struct SwapChainSupportDetails {
     VkSurfaceCapabilitiesKHR capabilities;
     std::vector<VkSurfaceFormatKHR> formats;
@@ -41,8 +53,8 @@ struct SwapChainSupportDetails {
 };
 
 struct Vertex {
-    glm::vec2 pos;
-    glm::vec3 color;
+    vec2 pos;
+    vec3 color;
 
 	static VkVertexInputBindingDescription getBindingDescription() {
         VkVertexInputBindingDescription bindingDescription{};
@@ -82,6 +94,16 @@ const std::vector<uint16_t> indices = {
     0, 1, 2, 2, 3, 0, 0, 4, 1
 };
 
+struct mat4 {
+	float data[4][4];
+};
+
+struct UniformBufferObject {
+    alignas(16) mat4 model;
+    alignas(16) mat4 view;
+	alignas(16) mat4 proj;
+};
+
 class	scopApp {
 	public:
 		void	run();
@@ -100,6 +122,7 @@ class	scopApp {
 		VkExtent2D swapChainExtent;
 		std::vector<VkImageView> swapChainImageViews;
 		VkRenderPass renderPass;
+		VkDescriptorSetLayout descriptorSetLayout;
 		VkPipelineLayout pipelineLayout;
 		VkPipeline graphicsPipeline;
 		std::vector<VkFramebuffer> swapChainFramebuffers;
@@ -115,6 +138,10 @@ class	scopApp {
 		VkDeviceMemory vertexBufferMemory;
 		VkBuffer indexBuffer;
 		VkDeviceMemory indexBufferMemory;
+		std::vector<VkBuffer> uniformBuffers;
+		std::vector<VkDeviceMemory> uniformBuffersMemory;
+		VkDescriptorPool descriptorPool;
+		std::vector<VkDescriptorSet> descriptorSets;
 
 		void	createInstance();
         void    initWindow();
@@ -155,4 +182,16 @@ class	scopApp {
 		void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
 		void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 		void createIndexBuffer();
+		void createDescriptorSetLayout();
+		void createUniformBuffers();
+		void updateUniformBuffer(uint32_t currentImage);
+		void createDescriptorPool();
+		void createDescriptorSets();
 };
+
+mat4	rotate_z(float time, float degree_angle);
+mat4	look_At(vec3 eye, vec3 center, vec3 up);
+vec3 cross(const vec3& a, const vec3& b);
+float dot(const vec3& a, const vec3& b);
+vec3 normalize(const vec3& v);
+mat4	perspective(float FOV, float aspect, float zNear, float zFar);
