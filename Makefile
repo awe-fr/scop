@@ -2,6 +2,7 @@ NAME = scop
 
 SRCS = SRCS/main.cpp\
 		SRCS/winApp.cpp\
+		SRCS/loadShader.cpp\
 
 OBJS = $(SRCS:.cpp=.o)
 
@@ -21,8 +22,6 @@ clean:
 		rm -f $(OBJS)
 
 fclean:		clean
-		rm -f shaders/frag.spv
-		rm -f shaders/vert.spv
 		rm -f $(NAME)
 
 re:		fclean all
