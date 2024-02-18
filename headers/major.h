@@ -4,11 +4,13 @@
 #include <vector>
 #include <fstream>
 #include <sstream>
+#include <cmath>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
 #include "./winApp.hpp"
+#include "./subMath.h"
 
 const int WIDTH = 800;
 const int HEIGHT = 600;

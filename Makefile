@@ -3,6 +3,7 @@ NAME = scop
 SRCS = SRCS/main.cpp\
 		SRCS/winApp.cpp\
 		SRCS/loadShader.cpp\
+		SRCS/subMath.cpp\
 
 OBJS = $(SRCS:.cpp=.o)
 
