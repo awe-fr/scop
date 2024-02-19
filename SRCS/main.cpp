@@ -24,22 +24,33 @@ int	main(int ac, char **av) {
 		glDrawArrays(GL_TRIANGLES, 0, 3); // Starting from vertex 0; 3 vertices total -> 1 triangle
 		glDisableVertexAttribArray(0);
 
-	ubo.proj = perspective(45, WIDTH / HEIGHT, 0.1f, 100.0f);
 
 
-	vec3 eye; eye.x = 4; eye.y = 3; eye.z = 3;
-	vec3 center; center.x = 0; center.y = 0; center.z = 0;
-	vec3 up; up.x = 0; up.y = 1; up.z = 0;
+		// static auto startTime = std::chrono::high_resolution_clock::now();
 
-	ubo.view = look_At(eye, center, up);
+		// auto currentTime = std::chrono::high_resolution_clock::now();
+		// float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
-	ubo.model = init_Base(1);
+		// ubo.model = rotate_z(time, 90);
 
-	mvp = mat_multiplication(mat_multiplication(ubo.proj, ubo.view), ubo.model);
-
+		ubo.proj = perspective(45, WIDTH / HEIGHT, 0.1f, 100.0f);
 
 
-	GLuint MatrixID = glGetUniformLocation(programID, "MVP");
+		vec3 eye; eye.x = 4; eye.y = 3; eye.z = 3;
+		vec3 center; center.x = 0; center.y = 0; center.z = 0;
+		vec3 up; up.x = 0; up.y = 1; up.z = 0;
+
+		ubo.view = look_At(eye, center, up);
+
+		ubo.model = init_Base(1);
+
+		mvp = mat_multiplication(mat_multiplication(ubo.proj, ubo.view), ubo.model);
+
+
+
+		GLuint MatrixID = glGetUniformLocation(programID, "MVP");
+
+		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp.data[0][0]);
 
 
 
