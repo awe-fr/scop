@@ -143,9 +143,28 @@ mat4    init_Base(float value) {
 	return matrix;
 }
 
-// mat4    mvp(mat4 proj, mat4 view, mat4 model) {
-//     mat4    matrix;
+mat4    mat_multiplication(mat4 f, mat4 s) {
+    mat4    matrix;
 
+    matrix.data[0][0] = (f.data[0][0] * s.data[0][0]) + (f.data[0][1] * s.data[0][1]) + (f.data[0][2] * s.data[0][2]) + (f.data[0][3] * s.data[0][3]);
+    matrix.data[0][1] = (f.data[0][0] * s.data[1][0]) + (f.data[0][1] * s.data[1][1]) + (f.data[0][2] * s.data[1][2]) + (f.data[0][3] * s.data[1][3]);
+    matrix.data[0][2] = (f.data[0][0] * s.data[2][0]) + (f.data[0][1] * s.data[2][1]) + (f.data[0][2] * s.data[2][2]) + (f.data[0][3] * s.data[2][3]);
+    matrix.data[0][3] = (f.data[0][0] * s.data[3][0]) + (f.data[0][1] * s.data[3][1]) + (f.data[0][2] * s.data[3][2]) + (f.data[0][3] * s.data[3][3]);
 
-//     return matrix;
-// }
+    matrix.data[1][0] = (f.data[1][0] * s.data[0][0]) + (f.data[1][1] * s.data[0][1]) + (f.data[1][2] * s.data[0][2]) + (f.data[1][3] * s.data[0][3]);
+    matrix.data[1][1] = (f.data[1][0] * s.data[1][0]) + (f.data[1][1] * s.data[1][1]) + (f.data[1][2] * s.data[1][2]) + (f.data[1][3] * s.data[1][3]);
+    matrix.data[1][2] = (f.data[1][0] * s.data[2][0]) + (f.data[1][1] * s.data[2][1]) + (f.data[1][2] * s.data[2][2]) + (f.data[1][3] * s.data[2][3]);
+    matrix.data[1][3] = (f.data[1][0] * s.data[3][0]) + (f.data[1][1] * s.data[3][1]) + (f.data[1][2] * s.data[3][2]) + (f.data[1][3] * s.data[3][3]);
+
+    matrix.data[2][0] = (f.data[2][0] * s.data[0][0]) + (f.data[2][1] * s.data[0][1]) + (f.data[2][2] * s.data[0][2]) + (f.data[2][3] * s.data[0][3]);
+    matrix.data[2][1] = (f.data[2][0] * s.data[1][0]) + (f.data[2][1] * s.data[1][1]) + (f.data[2][2] * s.data[1][2]) + (f.data[2][3] * s.data[1][3]);
+    matrix.data[2][2] = (f.data[2][0] * s.data[2][0]) + (f.data[2][1] * s.data[2][1]) + (f.data[2][2] * s.data[2][2]) + (f.data[2][3] * s.data[2][3]);
+    matrix.data[2][3] = (f.data[2][0] * s.data[3][0]) + (f.data[2][1] * s.data[3][1]) + (f.data[2][2] * s.data[3][2]) + (f.data[2][3] * s.data[3][3]);
+
+    matrix.data[3][0] = (f.data[3][0] * s.data[0][0]) + (f.data[3][1] * s.data[0][1]) + (f.data[3][2] * s.data[0][2]) + (f.data[3][3] * s.data[0][3]);
+    matrix.data[3][1] = (f.data[3][0] * s.data[1][0]) + (f.data[3][1] * s.data[1][1]) + (f.data[3][2] * s.data[1][2]) + (f.data[3][3] * s.data[1][3]);
+    matrix.data[3][2] = (f.data[3][0] * s.data[2][0]) + (f.data[3][1] * s.data[2][1]) + (f.data[3][2] * s.data[2][2]) + (f.data[3][3] * s.data[2][3]);
+    matrix.data[3][3] = (f.data[3][0] * s.data[3][0]) + (f.data[3][1] * s.data[3][1]) + (f.data[3][2] * s.data[3][2]) + (f.data[3][3] * s.data[3][3]);
+
+    return matrix;
+}

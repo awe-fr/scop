@@ -35,9 +35,11 @@ int	main(int ac, char **av) {
 
 	ubo.model = init_Base(1);
 
-	// mvp = mvp();
+	mvp = mat_multiplication(mat_multiplication(ubo.proj, ubo.view), ubo.model);
 
 
+
+	GLuint MatrixID = glGetUniformLocation(programID, "MVP");
 
 
 
