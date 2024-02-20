@@ -30,6 +30,7 @@ void	winApp::init() {
 
 	this->create_VAO();
 	this->create_vertex_buffer();
+	this->create_color_buffer();
 }
 
 int		winApp::is_close() {
@@ -54,12 +55,24 @@ void	winApp::create_VAO() {
 	glBindVertexArray(this->VertexArrayID);
 }
 
+void	winApp::create_color_buffer() {
+	glGenBuffers(1, &this->colorbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, this->colorbuffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data), g_color_buffer_data, GL_STATIC_DRAW);
+}
+
+
 void	winApp::create_vertex_buffer() {
 	glGenBuffers(1, &this->vertexbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, this->vertexbuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
 }
 
+GLuint	winApp::give_color_buffer() {
+	return (this->colorbuffer);
+}
+
 GLuint	winApp::give_vertex_buffer() {
 	return (this->vertexbuffer);
 }
+
