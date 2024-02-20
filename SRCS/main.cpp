@@ -33,6 +33,7 @@ int	main(int ac, char **av) {
 
 		// ubo.model = rotate_z(time, 90);
 
+
 		ubo.proj = perspective(45, WIDTH / HEIGHT, 0.1f, 100.0f);
 
 
@@ -44,18 +45,10 @@ int	main(int ac, char **av) {
 
 		ubo.model = init_Base(1);
 
-		mvp = mat_multiplication(mat_multiplication(ubo.proj, ubo.view), ubo.model);
-
-
-
+		mvp = mat_multiplication(ubo.model, mat_multiplication(ubo.proj, ubo.view));
 		GLuint MatrixID = glGetUniformLocation(programID, "MVP");
 
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp.data[0][0]);
-
-
-
-
-
 
 
 	}
