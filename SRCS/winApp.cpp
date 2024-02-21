@@ -30,7 +30,7 @@ void	winApp::init() {
 
 	this->create_VAO();
 	this->create_vertex_buffer();
-	this->create_color_buffer();
+	this->create_texture_buffer();
 }
 
 int		winApp::is_close() {
@@ -61,11 +61,16 @@ void	winApp::create_color_buffer() {
 	glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data), g_color_buffer_data, GL_STATIC_DRAW);
 }
 
-
 void	winApp::create_vertex_buffer() {
 	glGenBuffers(1, &this->vertexbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, this->vertexbuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
+}
+
+void	winApp::create_texture_buffer() {
+	glGenBuffers(1, &this->texturebuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, this->texturebuffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(g_uv_buffer_data), g_uv_buffer_data, GL_STATIC_DRAW);
 }
 
 GLuint	winApp::give_color_buffer() {
@@ -74,5 +79,9 @@ GLuint	winApp::give_color_buffer() {
 
 GLuint	winApp::give_vertex_buffer() {
 	return (this->vertexbuffer);
+}
+
+GLuint	winApp::give_texture_buffer() {
+	return (this->texturebuffer);
 }
 
