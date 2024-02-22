@@ -4,7 +4,7 @@ SRCS = SRCS/main.cpp\
 		SRCS/winApp.cpp\
 		SRCS/loadShader.cpp\
 		SRCS/subMath.cpp\
-		SRCS/BMPloader.cpp\
+		SRCS/textureLoader.cpp\
 
 OBJS = $(SRCS:.cpp=.o)
 

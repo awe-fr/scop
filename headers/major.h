@@ -20,4 +20,6 @@ const int HEIGHT = 600;
 
 GLuint  LoadShaders(const char * vertex_file_path,const char * fragment_file_path);
 
-GLuint loadBMP_custom(const char * imagepath);
+GLuint  loadBMP_custom(const char * imagepath);
+GLuint  loadTGA_glfw(const char *imagepath);
+GLuint  loadTGA(const char *imagepath);

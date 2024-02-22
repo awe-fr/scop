@@ -7,7 +7,7 @@ int	main(int ac, char **av) {
 
 	app.init();
 
-	GLuint	image = loadBMP_custom("./textures/uvtemplate.bmp");
+	GLuint	image = loadTGA("./textures/uvtemplate.tga");
 
 	GLuint programID = LoadShaders( "./shaders/shader.vert", "./shaders/shader.frag" );
 	glClearColor(0.0f, 0.0f, 0.5f, 0.0f);
@@ -65,7 +65,7 @@ mat4	ubo_init(void) {
 	vec3 up; up.x = 0; up.y = 1; up.z = 0;
 
 	ubo.view = look_At(eye, center, up);
-	// ubo.model = init_Base(1);
+	ubo.model = init_Base(1);
 
 	mvp = mat_multiplication(mat_multiplication(ubo.proj, ubo.view), ubo.model);
 
