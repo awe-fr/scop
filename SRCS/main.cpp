@@ -7,7 +7,7 @@ int	main(int ac, char **av) {
 
 	app.init();
 
-	GLuint	image = loadTGA("./textures/uvtemplate.tga");
+	GLuint	image = loadDDS("./textures/test4.dds");
 
 	GLuint programID = LoadShaders( "./shaders/shader.vert", "./shaders/shader.frag" );
 	glClearColor(0.0f, 0.0f, 0.5f, 0.0f);

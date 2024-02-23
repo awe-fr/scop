@@ -34,9 +34,8 @@ void	winApp::init() {
 }
 
 int		winApp::is_close() {
-	if (glfwGetKey(this->window, GLFW_KEY_ESCAPE) == GLFW_PRESS || glfwWindowShouldClose(this->window) != 0) {
+	if (glfwGetKey(this->window, GLFW_KEY_ESCAPE) == GLFW_PRESS || glfwWindowShouldClose(this->window) != 0)
 		return 1;
-	}
 
 	// glClear(GL_COLOR_BUFFER_BIT);
 
