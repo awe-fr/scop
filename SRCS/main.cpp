@@ -56,7 +56,12 @@ mat4	ubo_init(void) {
     auto currentTime = std::chrono::high_resolution_clock::now();
     float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
-	ubo.model = rotate_z(time, 90);
+	if ((int)time % 15 >= 10)
+		ubo.model = rotate_y(time, 90);
+	else if ((int)time % 15 >= 5)
+		ubo.model = rotate_x(time, 90);
+	else
+		ubo.model = rotate_z(time, 90);
 
 	ubo.proj = perspective(45, 4 / 3, 0.1f, 100.0f);
 
@@ -65,7 +70,7 @@ mat4	ubo_init(void) {
 	vec3 up; up.x = 0; up.y = 1; up.z = 0;
 
 	ubo.view = look_At(eye, center, up);
-	ubo.model = init_Base(1);
+	// ubo.model = init_Base(1);
 
 	mvp = mat_multiplication(mat_multiplication(ubo.proj, ubo.view), ubo.model);
 

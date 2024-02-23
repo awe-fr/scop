@@ -29,6 +29,64 @@ mat4	rotate_z(float time, float degree_angle) {
 	return matrix;
 }
 
+mat4    rotate_y(float time, float degree_angle) {
+    float angle_radians = degree_angle * M_PI / 180.0f;
+    angle_radians *= time;
+
+    mat4 matrix;
+
+    matrix.data[0][0] = cos(angle_radians);
+    matrix.data[0][1] = 0;
+    matrix.data[0][2] = sin(angle_radians);
+    matrix.data[0][3] = 0;
+
+    matrix.data[1][0] = 0;
+    matrix.data[1][1] = 1;
+    matrix.data[1][2] = 0;
+    matrix.data[1][3] = 0;
+
+    matrix.data[2][0] = -sin(angle_radians);
+    matrix.data[2][1] = 0;
+    matrix.data[2][2] = cos(angle_radians);
+    matrix.data[2][3] = 0;
+
+    matrix.data[3][0] = 0;
+    matrix.data[3][1] = 0;
+    matrix.data[3][2] = 0;
+    matrix.data[3][3] = 1;
+
+    return matrix;
+}
+
+mat4    rotate_x(float time, float degree_angle) {
+    float angle_radians = degree_angle * M_PI / 180.0f;
+    angle_radians *= time;
+
+    mat4 matrix;
+
+    matrix.data[0][0] = 1;
+    matrix.data[0][1] = 0;
+    matrix.data[0][2] = 0;
+    matrix.data[0][3] = 0;
+
+    matrix.data[1][0] = 0;
+    matrix.data[1][1] = cos(angle_radians);
+    matrix.data[1][2] = -sin(angle_radians);
+    matrix.data[1][3] = 0;
+
+    matrix.data[2][0] = 0;
+    matrix.data[2][1] = sin(angle_radians);
+    matrix.data[2][2] = cos(angle_radians);
+    matrix.data[2][3] = 0;
+
+    matrix.data[3][0] = 0;
+    matrix.data[3][1] = 0;
+    matrix.data[3][2] = 0;
+    matrix.data[3][3] = 1;
+
+    return matrix;
+}
+
 mat4	look_At(vec3 eye, vec3 center, vec3 up) {
 	vec3 cal;
 	cal.x = center.x - eye.x;
