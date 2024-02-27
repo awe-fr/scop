@@ -1,6 +1,6 @@
 #pragma once
 
-#include "./major.h"
+#include "./major.hpp"
 
 struct	vec2 {
 	float   x;
@@ -31,7 +31,10 @@ mat4	perspective(float FOV, float aspect, float zNear, float zFar);
 mat4	init_Base(float value);
 mat4    mat_multiplication(mat4 f, mat4 s);
 
-vec3 cross(const vec3& a, const vec3& b);
-vec3 normalize(const vec3& v);
+vec3	cross(const vec3& a, const vec3& b);
+vec3	normalize(const vec3& v);
+vec3    vec_multiplication(vec3 f, float s);
+vec3    vec_addition_egal(vec3 f, vec3 s);
+vec3    vec_substract_egal(vec3 f, vec3 s);
 
-float dot(const vec3& a, const vec3& b);
+float	dot(const vec3& a, const vec3& b);

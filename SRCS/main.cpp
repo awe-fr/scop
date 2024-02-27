@@ -1,6 +1,6 @@
-#include "../headers/major.h"
+#include "../headers/major.hpp"
 
-mat4	ubo_init(void);
+float   deltaTime;
 
 int	main(int ac, char **av) {
 	winApp app;
@@ -13,6 +13,7 @@ int	main(int ac, char **av) {
 	glClearColor(0.0f, 0.0f, 0.5f, 0.0f);
 
 	while(app.is_close() == 0) {
+		getDeltaTime();
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LESS);
 
@@ -36,7 +37,7 @@ int	main(int ac, char **av) {
 		glDrawArrays(GL_TRIANGLES, 0, 12*3); // Starting from vertex 0; 3 vertices total -> 1 triangle
 		glDisableVertexAttribArray(0);
 
-		mat4	mvp = ubo_init();
+		mat4	mvp = ubo_init(app);
 
 		GLuint MatrixID = glGetUniformLocation(programID, "MVP");
 
@@ -47,32 +48,10 @@ int	main(int ac, char **av) {
 	app.clear();
 }
 
-mat4	ubo_init(void) {
-	UniformBufferObject ubo;
-	mat4	mvp;
+float getDeltaTime() {
+	static double last = glfwGetTime();
 
-	static auto startTime = std::chrono::high_resolution_clock::now();
-
-    auto currentTime = std::chrono::high_resolution_clock::now();
-    float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
-
-	if ((int)time % 15 >= 10)
-		ubo.model = rotate_y(time, 90);
-	else if ((int)time % 15 >= 5)
-		ubo.model = rotate_x(time, 90);
-	else
-		ubo.model = rotate_z(time, 90);
-
-	ubo.proj = perspective(45, 4 / 3, 0.1f, 100.0f);
-
-	vec3 eye; eye.x = 4; eye.y = 3; eye.z = 3;
-	vec3 center; center.x = 0; center.y = 0; center.z = 0;
-	vec3 up; up.x = 0; up.y = 1; up.z = 0;
-
-	ubo.view = look_At(eye, center, up);
-	// ubo.model = init_Base(1);
-
-	mvp = mat_multiplication(mat_multiplication(ubo.proj, ubo.view), ubo.model);
-
-	return (mvp);
+	double now = glfwGetTime();
+	deltaTime = (float)(now - last);
+	last = now;
 }

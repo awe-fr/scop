@@ -14,7 +14,8 @@
 // #include <glm/gtc/matrix_transform.hpp>
 
 #include "./winApp.hpp"
-#include "./subMath.h"
+#include "./subMath.hpp"
+#include "./controls.hpp"
 
 #define FOURCC_DXT1 0x31545844
 #define FOURCC_DXT3 0x33545844
@@ -22,6 +23,8 @@
 
 const int WIDTH = 800;
 const int HEIGHT = 600;
+
+float   getDeltaTime();
 
 GLuint  LoadShaders(const char * vertex_file_path,const char * fragment_file_path);
 

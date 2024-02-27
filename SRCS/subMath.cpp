@@ -1,4 +1,4 @@
-#include "../headers/major.h"
+#include "../headers/major.hpp"
 
 mat4	rotate_z(float time, float degree_angle) {
 	float angle_radians = degree_angle * M_PI / 180.0f;
@@ -233,4 +233,25 @@ mat4    mat_multiplication(mat4 f, mat4 s) {
     // matrix.data[3][3] = (f.data[3][0] * s.data[3][0]) + (f.data[3][1] * s.data[3][1]) + (f.data[3][2] * s.data[3][2]) + (f.data[3][3] * s.data[3][3]);
 
     return matrix;
+}
+
+vec3    vec_multiplication(vec3 f, float s) {
+    f.x = f.x * s;
+    f.y = f.y * s;
+    f.z = f.z * s;
+    return (f);
+}
+
+vec3    vec_addition_egal(vec3 f, vec3 s) {
+    f.x += s.x;
+    f.y += s.y;
+    f.z += s.z;
+    return (f);
+}
+
+vec3    vec_substract_egal(vec3 f, vec3 s) {
+    f.x -= s.x;
+    f.y -= s.y;
+    f.z -= s.z;
+    return (f);
 }

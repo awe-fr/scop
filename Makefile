@@ -5,6 +5,7 @@ SRCS = SRCS/main.cpp\
 		SRCS/loadShader.cpp\
 		SRCS/subMath.cpp\
 		SRCS/textureLoader.cpp\
+		SRCS/controls.cpp\
 
 OBJS = $(SRCS:.cpp=.o)
 

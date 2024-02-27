@@ -1,4 +1,4 @@
-#include "../headers/major.h"
+#include "../headers/major.hpp"
 
 GLuint	loadDDS(const char *imagepath) {
 	unsigned char	header[124];

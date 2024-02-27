@@ -84,3 +84,6 @@ GLuint	winApp::give_texture_buffer() {
 	return (this->texturebuffer);
 }
 
+GLFWwindow	*winApp::give_win() {
+	return (this->window);
+}

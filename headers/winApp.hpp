@@ -1,6 +1,6 @@
 #pragma once
 
-#include "./major.h"
+#include "./major.hpp"
 
 static const GLfloat g_vertex_buffer_data[] = {
     -1.0f,-1.0f,-1.0f,
@@ -142,4 +142,5 @@ class	winApp {
 		GLuint	give_vertex_buffer();
 		GLuint	give_color_buffer();
         GLuint	give_texture_buffer();
+        GLFWwindow	*give_win();
 };
