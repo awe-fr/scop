@@ -6,12 +6,24 @@ mat4    nextProjMat;
 mat4    nextViewMat;
 mat4    nextModelMat;
 
+#include <stdio.h>
+
+void	print_mat(mat4 m)
+{
+	for (int i = 0; i < 4; ++i)
+		printf("%3.3f %3.3f %3.3f %3.3f\n", m.data[i][0], m.data[i][1], m.data[i][2], m.data[i][3]);
+}
 
 mat4	ubo_init(winApp app) {
 	UniformBufferObject ubo;
 	mat4	mvp;
 
+	ubo = computeMatricesFromInputs(app);
+
 	// static auto startTime = std::chrono::high_resolution_clock::now();
+	// static float dx = 0;
+	// static float dy = 0;
+	// static float dz = 0;
 
     // auto currentTime = std::chrono::high_resolution_clock::now();
     // float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
@@ -22,17 +34,15 @@ mat4	ubo_init(winApp app) {
 	// 	ubo.model = rotate_x(time, 90);
 	// else
 	// 	ubo.model = rotate_z(time, 90);
+
+	// ubo.model = rotate_y(time, 90);
     
 	// ubo.proj = perspective(45, 4 / 3, 0.1f, 100.0f);
 
-	// vec3 eye; eye.x = 4; eye.y = 3; eye.z = 3;
+	// vec3 eye; eye.x = 0; eye.y = 0; eye.z = 5;
 	// vec3 center; center.x = 0; center.y = 0; center.z = 0;
 	// vec3 up; up.x = 0; up.y = 1; up.z = 0;
 	// ubo.view = look_At(eye, center, up);
-
-	// ubo.model = init_Base(1);
-
-	ubo = computeMatricesFromInputs(app);
 
 	// ubo.proj = getProjectionMatrix();
 
@@ -40,7 +50,14 @@ mat4	ubo_init(winApp app) {
 
 	// ubo.model = getModelMatrix();
 
-	mvp = mat_multiplication(mat_multiplication(ubo.proj, ubo.view), ubo.model);
+	printf("--- MODEL ---\n");
+	print_mat(ubo.model);
+	printf("--- VIEW ---\n");
+	print_mat(ubo.view);
+	printf("--- PROJ ---\n");
+	print_mat(ubo.proj);
+
+	mvp = mat_multiplication(ubo.proj, mat_multiplication(ubo.view, ubo.model));
 
 	return (mvp);
 }
@@ -49,12 +66,12 @@ UniformBufferObject	computeMatricesFromInputs(winApp app) {
 	UniformBufferObject ubo;
 
 	//initial position
-	vec3 position; position.x = 0; position.y = 0; position.z = 5;
+	static vec3 position = {0, 0, 0};
 
 	//where and how look
-	float horizontalAngle = 3.14f;
-	float verticalAngle = 0.0f;
-	float initialFoV = 45.0f;
+	static float horizontalAngle = 3.14f;
+	static float verticalAngle = 0.0f;
+	static float initialFoV = 45.0f;
 
 	//speed
 	float speed = 3.0f;
@@ -68,8 +85,8 @@ UniformBufferObject	computeMatricesFromInputs(winApp app) {
 	glfwSetCursorPos(app.give_win(), WIDTH/2, HEIGHT/2);
 
 	//cal new orientation
-	horizontalAngle += mouseSpeed * deltaTime * float(WIDTH/2 - xpos);
-	verticalAngle   += mouseSpeed * deltaTime * float(HEIGHT/2 - ypos);
+	horizontalAngle += mouseSpeed * deltaTime * float((float)WIDTH/2. - xpos);
+	verticalAngle   += mouseSpeed * deltaTime * float((float)HEIGHT/2. - ypos);
 
 	//vector for where we look
 	vec3 direction; direction.x = cos(verticalAngle) * sin(horizontalAngle); direction.y = sin(verticalAngle); direction.z = cos(verticalAngle) * cos(horizontalAngle);
@@ -77,21 +94,26 @@ UniformBufferObject	computeMatricesFromInputs(winApp app) {
 	vec3 up = cross(right, direction);
 
 	if (glfwGetKey(app.give_win(), GLFW_KEY_UP) == GLFW_PRESS) {
-		position = vec_addition_egal(position, vec_multiplication(vec_multiplication(direction, deltaTime), speed));
+		position = vec_addition_egal(position, vec_multiplication(direction, deltaTime * speed));
 	}
-	if (glfwGetKey(app.give_win(), GLFW_KEY_DOWN) == GLFW_PRESS) {
-		position = vec_substract_egal(position, vec_multiplication(vec_multiplication(direction, deltaTime), speed));
-	}
-	if (glfwGetKey(app.give_win(), GLFW_KEY_RIGHT) == GLFW_PRESS) {
-		position = vec_addition_egal(right, vec_multiplication(vec_multiplication(direction, deltaTime), speed));
+	if (glfwGetKey(app.give_win(), GLFW_KEY_DOWN) == GLFW_PRESS)  {
+		position = vec_substract_egal(position, vec_multiplication(direction, deltaTime * speed));
 	}
 	if (glfwGetKey(app.give_win(), GLFW_KEY_LEFT) == GLFW_PRESS) {
-		position = vec_substract_egal(right, vec_multiplication(vec_multiplication(direction, deltaTime), speed));
+		position = vec_addition_egal(position, vec_multiplication(right, deltaTime * speed));
 	}
+	if (glfwGetKey(app.give_win(), GLFW_KEY_RIGHT) == GLFW_PRESS) {
+		position = vec_substract_egal(position, vec_multiplication(right, deltaTime * speed));
+	}
+
+	// std::cout << position.x << " " << position.y << " " << position.z << std::endl;
+	// std::cout << direction.x << " " << direction.y << " " << direction.z << std::endl;
+	// std::cout << horizontalAngle << " " << verticalAngle << std::endl;
+	// std::cout << float(WIDTH/2 - xpos) << " " << float(HEIGHT/2 - ypos) << std::endl;
 
 	float FoV = initialFoV;
 
-	ubo.proj = perspective(FoV, WIDTH / HEIGHT, 0.1f, 100.0f);
+	ubo.proj = perspective(FoV, (double)WIDTH / (double)HEIGHT, 0.1f, 100.0f);
 
 	ubo.view = look_At(position, vec_addition_egal(position, direction), up);
 

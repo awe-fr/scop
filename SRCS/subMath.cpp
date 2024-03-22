@@ -94,32 +94,51 @@ mat4	look_At(vec3 eye, vec3 center, vec3 up) {
 	cal.z = center.z - eye.z;
 
 	vec3 f = normalize(cal);
-    vec3 r = normalize(cross(up, f));
-    vec3 u = cross(f, r);
+    vec3 r = normalize(cross(f, up));
+    vec3 u = cross(r, f);
 
 	mat4	matrix;
 
     matrix.data[0][0] = r.x;
-    matrix.data[0][1] = u.x;
-    matrix.data[0][2] = -f.x;
-    matrix.data[0][3] = 0;
+    matrix.data[1][0] = u.x;
+    matrix.data[2][0] = -f.x;
+    matrix.data[3][0] = 0;
 
-    matrix.data[1][0] = r.y;
+    matrix.data[0][1] = r.y;
     matrix.data[1][1] = u.y;
-    matrix.data[1][2] = -f.x;
-    matrix.data[1][3] = 0;
+    matrix.data[2][1] = -f.y;
+    matrix.data[3][1] = 0;
 
-    matrix.data[2][0] = r.z;
-    matrix.data[2][1] = u.z;
-    matrix.data[2][2] = -f.x;
-    matrix.data[2][3] = 0;
+    matrix.data[0][2] = r.z;
+    matrix.data[1][2] = u.z;
+    matrix.data[2][2] = -f.z;
+    matrix.data[3][2] = 0;
 
-    matrix.data[3][0] = -dot(r, eye);
-    matrix.data[3][1] = -dot(u, eye);
-    matrix.data[3][2] = dot(f, eye);
+    matrix.data[0][3] = -dot(r, eye);
+    matrix.data[1][3] = -dot(u, eye);
+    matrix.data[2][3] = dot(f, eye);
     matrix.data[3][3] = 1;
 
     return matrix;
+
+    // detail::tvec3<T, P> const f(normalize(center - eye));
+    // detail::tvec3<T, P> const s(normalize(cross(f, up)));
+    // detail::tvec3<T, P> const u(cross(s, f));
+
+    // detail::tmat4x4<T, P> Result(1);
+    // Result[0][0] = s.x;
+    // Result[1][0] = s.y;
+    // Result[2][0] = s.z;
+    // Result[0][1] = u.x;
+    // Result[1][1] = u.y;
+    // Result[2][1] = u.z;
+    // Result[0][2] =-f.x;
+    // Result[1][2] =-f.y;
+    // Result[2][2] =-f.z;
+    // Result[3][0] =-dot(s, eye);
+    // Result[3][1] =-dot(u, eye);
+    // Result[3][2] = dot(f, eye);
+    // return Result;
 }
 
 vec3 cross(const vec3& a, const vec3& b) {
@@ -127,10 +146,6 @@ vec3 cross(const vec3& a, const vec3& b) {
     result.x = a.y * b.z - a.z * b.y;
     result.y = a.z * b.x - a.x * b.z;
     result.z = a.x * b.y - a.y * b.x;
-
-	result.x = -result.x;
-    result.y = -result.y;
-    result.z = -result.z;
     return result;
 }
 
@@ -148,31 +163,19 @@ float dot(const vec3& a, const vec3& b) {
 }
 
 mat4	perspective(float FOV, float aspect, float zNear, float zFar) {
-	float tanHalfFovy = std::tan((FOV * M_PI / 180.0f) / 2.0f);
 
-	mat4	matrix;
+    float const rad = FOV * M_PI / 2.;
+    float const tanHalfFovy = tan(rad / 2.);
 
-    matrix.data[0][0] = 1.0f / (aspect * tanHalfFovy);
-    matrix.data[0][1] = 0;
-    matrix.data[0][2] = 0;
-    matrix.data[0][3] = 0;
+    mat4    res = init_Base(0);
 
-    matrix.data[1][0] = 0;
-    matrix.data[1][1] = 1.0f / (tanHalfFovy);
-    matrix.data[1][2] = 0;
-    matrix.data[1][3] = 0;
+    res.data[0][0] = 1. / (aspect * tanHalfFovy);
+    res.data[1][1] = 1. / (tanHalfFovy);
+    res.data[2][2] = - (zFar + zNear) / (zFar - zNear);
+    res.data[3][2] = - 1.;
+    res.data[2][3] = - (2. * zFar * zNear) / (zFar - zNear);
 
-    matrix.data[2][0] = 0;
-    matrix.data[2][1] = 0;
-    matrix.data[2][2] = -(zFar + zNear) / (zFar - zNear);;
-    matrix.data[2][3] = -1;
-
-    matrix.data[3][0] = 0;
-    matrix.data[3][1] = 0;
-    matrix.data[3][2] = -(2.0f * zFar * zNear) / (zFar - zNear);
-    matrix.data[3][3] = 0;
-
-	return matrix;
+    return (res);
 }
 
 mat4    init_Base(float value) {
@@ -201,16 +204,14 @@ mat4    init_Base(float value) {
 	return matrix;
 }
 
-mat4    mat_multiplication(mat4 f, mat4 s) {
+mat4    mat_multiplication(mat4 a, mat4 b) {
     mat4    matrix;
 
-
-    for (int i = 0; i < 4; i++) {
-        for (int y = 0; y < 4; y++) {
-            matrix.data[i][y] = (s.data[i][0] * f.data[0][y]) + (s.data[i][1] * f.data[1][y]) + (s.data[i][2] * f.data[2][y]) + (s.data[i][3] * f.data[3][y]);
+    for (int y = 0; y < 4; y++) {
+        for (int x = 0; x < 4; x++) {
+            matrix.data[y][x] = a.data[y][0] * b.data[0][x] + a.data[y][1] * b.data[1][x] + a.data[y][2] * b.data[2][x] + a.data[y][3] * b.data[3][x];
         }
     }
-
 
     // matrix.data[0][0] = (f.data[0][0] * s.data[0][0]) + (f.data[0][1] * s.data[0][1]) + (f.data[0][2] * s.data[0][2]) + (f.data[0][3] * s.data[0][3]);
     // matrix.data[0][1] = (f.data[0][0] * s.data[1][0]) + (f.data[0][1] * s.data[1][1]) + (f.data[0][2] * s.data[1][2]) + (f.data[0][3] * s.data[1][3]);
