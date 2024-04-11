@@ -4,26 +4,16 @@ mat4	rotate_z(float time, float degree_angle) {
 	float angle_radians = degree_angle * M_PI / 180.0f;
 	angle_radians *= time;
 
-	mat4	matrix;
+	mat4	matrix = init_Base(0);
 
 	matrix.data[0][0] = cos(angle_radians);
 	matrix.data[0][1] = -sin(angle_radians);
-	matrix.data[0][2] = 0;
-	matrix.data[0][3] = 0;
 
 	matrix.data[1][0] = sin(angle_radians);
 	matrix.data[1][1] = cos(angle_radians);
-	matrix.data[1][2] = 0;
-	matrix.data[1][3] = 0;
 
-	matrix.data[2][0] = 0;
-	matrix.data[2][1] = 0;
 	matrix.data[2][2] = 1;
-	matrix.data[2][3] = 0;
 
-	matrix.data[3][0] = 0;
-	matrix.data[3][1] = 0;
-	matrix.data[3][2] = 0;
 	matrix.data[3][3] = 1;
 
 	return matrix;
@@ -33,26 +23,16 @@ mat4    rotate_y(float time, float degree_angle) {
     float angle_radians = degree_angle * M_PI / 180.0f;
     angle_radians *= time;
 
-    mat4 matrix;
+    mat4 matrix = init_Base(0);
 
     matrix.data[0][0] = cos(angle_radians);
-    matrix.data[0][1] = 0;
     matrix.data[0][2] = sin(angle_radians);
-    matrix.data[0][3] = 0;
 
-    matrix.data[1][0] = 0;
     matrix.data[1][1] = 1;
-    matrix.data[1][2] = 0;
-    matrix.data[1][3] = 0;
 
     matrix.data[2][0] = -sin(angle_radians);
-    matrix.data[2][1] = 0;
     matrix.data[2][2] = cos(angle_radians);
-    matrix.data[2][3] = 0;
 
-    matrix.data[3][0] = 0;
-    matrix.data[3][1] = 0;
-    matrix.data[3][2] = 0;
     matrix.data[3][3] = 1;
 
     return matrix;
@@ -62,26 +42,16 @@ mat4    rotate_x(float time, float degree_angle) {
     float angle_radians = degree_angle * M_PI / 180.0f;
     angle_radians *= time;
 
-    mat4 matrix;
+    mat4 matrix = init_Base(0);
 
     matrix.data[0][0] = 1;
-    matrix.data[0][1] = 0;
-    matrix.data[0][2] = 0;
-    matrix.data[0][3] = 0;
 
-    matrix.data[1][0] = 0;
     matrix.data[1][1] = cos(angle_radians);
     matrix.data[1][2] = -sin(angle_radians);
-    matrix.data[1][3] = 0;
 
-    matrix.data[2][0] = 0;
     matrix.data[2][1] = sin(angle_radians);
     matrix.data[2][2] = cos(angle_radians);
-    matrix.data[2][3] = 0;
 
-    matrix.data[3][0] = 0;
-    matrix.data[3][1] = 0;
-    matrix.data[3][2] = 0;
     matrix.data[3][3] = 1;
 
     return matrix;
@@ -97,48 +67,26 @@ mat4	look_At(vec3 eye, vec3 center, vec3 up) {
     vec3 r = normalize(cross(f, up));
     vec3 u = cross(r, f);
 
-	mat4	matrix;
+	mat4	matrix = init_Base(0);
 
     matrix.data[0][0] = r.x;
     matrix.data[1][0] = u.x;
     matrix.data[2][0] = -f.x;
-    matrix.data[3][0] = 0;
 
     matrix.data[0][1] = r.y;
     matrix.data[1][1] = u.y;
     matrix.data[2][1] = -f.y;
-    matrix.data[3][1] = 0;
 
     matrix.data[0][2] = r.z;
     matrix.data[1][2] = u.z;
     matrix.data[2][2] = -f.z;
-    matrix.data[3][2] = 0;
 
     matrix.data[0][3] = -dot(r, eye);
     matrix.data[1][3] = -dot(u, eye);
-    matrix.data[2][3] = dot(f, eye);
+    matrix.data[2][3] = dot(f, eye); // augmente chelou
     matrix.data[3][3] = 1;
 
     return matrix;
-
-    // detail::tvec3<T, P> const f(normalize(center - eye));
-    // detail::tvec3<T, P> const s(normalize(cross(f, up)));
-    // detail::tvec3<T, P> const u(cross(s, f));
-
-    // detail::tmat4x4<T, P> Result(1);
-    // Result[0][0] = s.x;
-    // Result[1][0] = s.y;
-    // Result[2][0] = s.z;
-    // Result[0][1] = u.x;
-    // Result[1][1] = u.y;
-    // Result[2][1] = u.z;
-    // Result[0][2] =-f.x;
-    // Result[1][2] =-f.y;
-    // Result[2][2] =-f.z;
-    // Result[3][0] =-dot(s, eye);
-    // Result[3][1] =-dot(u, eye);
-    // Result[3][2] = dot(f, eye);
-    // return Result;
 }
 
 vec3 cross(const vec3& a, const vec3& b) {
@@ -212,27 +160,6 @@ mat4    mat_multiplication(mat4 a, mat4 b) {
             matrix.data[y][x] = a.data[y][0] * b.data[0][x] + a.data[y][1] * b.data[1][x] + a.data[y][2] * b.data[2][x] + a.data[y][3] * b.data[3][x];
         }
     }
-
-    // matrix.data[0][0] = (f.data[0][0] * s.data[0][0]) + (f.data[0][1] * s.data[0][1]) + (f.data[0][2] * s.data[0][2]) + (f.data[0][3] * s.data[0][3]);
-    // matrix.data[0][1] = (f.data[0][0] * s.data[1][0]) + (f.data[0][1] * s.data[1][1]) + (f.data[0][2] * s.data[1][2]) + (f.data[0][3] * s.data[1][3]);
-    // matrix.data[0][2] = (f.data[0][0] * s.data[2][0]) + (f.data[0][1] * s.data[2][1]) + (f.data[0][2] * s.data[2][2]) + (f.data[0][3] * s.data[2][3]);
-    // matrix.data[0][3] = (f.data[0][0] * s.data[3][0]) + (f.data[0][1] * s.data[3][1]) + (f.data[0][2] * s.data[3][2]) + (f.data[0][3] * s.data[3][3]);
-
-    // matrix.data[1][0] = (f.data[1][0] * s.data[0][0]) + (f.data[1][1] * s.data[0][1]) + (f.data[1][2] * s.data[0][2]) + (f.data[1][3] * s.data[0][3]);
-    // matrix.data[1][1] = (f.data[1][0] * s.data[1][0]) + (f.data[1][1] * s.data[1][1]) + (f.data[1][2] * s.data[1][2]) + (f.data[1][3] * s.data[1][3]);
-    // matrix.data[1][2] = (f.data[1][0] * s.data[2][0]) + (f.data[1][1] * s.data[2][1]) + (f.data[1][2] * s.data[2][2]) + (f.data[1][3] * s.data[2][3]);
-    // matrix.data[1][3] = (f.data[1][0] * s.data[3][0]) + (f.data[1][1] * s.data[3][1]) + (f.data[1][2] * s.data[3][2]) + (f.data[1][3] * s.data[3][3]);
-
-    // matrix.data[2][0] = (f.data[2][0] * s.data[0][0]) + (f.data[2][1] * s.data[0][1]) + (f.data[2][2] * s.data[0][2]) + (f.data[2][3] * s.data[0][3]);
-    // matrix.data[2][1] = (f.data[2][0] * s.data[1][0]) + (f.data[2][1] * s.data[1][1]) + (f.data[2][2] * s.data[1][2]) + (f.data[2][3] * s.data[1][3]);
-    // matrix.data[2][2] = (f.data[2][0] * s.data[2][0]) + (f.data[2][1] * s.data[2][1]) + (f.data[2][2] * s.data[2][2]) + (f.data[2][3] * s.data[2][3]);
-    // matrix.data[2][3] = (f.data[2][0] * s.data[3][0]) + (f.data[2][1] * s.data[3][1]) + (f.data[2][2] * s.data[3][2]) + (f.data[2][3] * s.data[3][3]);
-
-    // matrix.data[3][0] = (f.data[3][0] * s.data[0][0]) + (f.data[3][1] * s.data[0][1]) + (f.data[3][2] * s.data[0][2]) + (f.data[3][3] * s.data[0][3]);
-    // matrix.data[3][1] = (f.data[3][0] * s.data[1][0]) + (f.data[3][1] * s.data[1][1]) + (f.data[3][2] * s.data[1][2]) + (f.data[3][3] * s.data[1][3]);
-    // matrix.data[3][2] = (f.data[3][0] * s.data[2][0]) + (f.data[3][1] * s.data[2][1]) + (f.data[3][2] * s.data[2][2]) + (f.data[3][3] * s.data[2][3]);
-    // matrix.data[3][3] = (f.data[3][0] * s.data[3][0]) + (f.data[3][1] * s.data[3][1]) + (f.data[3][2] * s.data[3][2]) + (f.data[3][3] * s.data[3][3]);
-
     return matrix;
 }
 

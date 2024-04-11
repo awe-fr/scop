@@ -99,17 +99,12 @@ UniformBufferObject	computeMatricesFromInputs(winApp app) {
 	if (glfwGetKey(app.give_win(), GLFW_KEY_DOWN) == GLFW_PRESS)  {
 		position = vec_substract_egal(position, vec_multiplication(direction, deltaTime * speed));
 	}
-	if (glfwGetKey(app.give_win(), GLFW_KEY_LEFT) == GLFW_PRESS) {
+	if (glfwGetKey(app.give_win(), GLFW_KEY_RIGHT) == GLFW_PRESS) {
 		position = vec_addition_egal(position, vec_multiplication(right, deltaTime * speed));
 	}
-	if (glfwGetKey(app.give_win(), GLFW_KEY_RIGHT) == GLFW_PRESS) {
+	if (glfwGetKey(app.give_win(), GLFW_KEY_LEFT) == GLFW_PRESS) {
 		position = vec_substract_egal(position, vec_multiplication(right, deltaTime * speed));
 	}
-
-	// std::cout << position.x << " " << position.y << " " << position.z << std::endl;
-	// std::cout << direction.x << " " << direction.y << " " << direction.z << std::endl;
-	// std::cout << horizontalAngle << " " << verticalAngle << std::endl;
-	// std::cout << float(WIDTH/2 - xpos) << " " << float(HEIGHT/2 - ypos) << std::endl;
 
 	float FoV = initialFoV;
 
