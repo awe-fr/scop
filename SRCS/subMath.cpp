@@ -1,15 +1,5 @@
 #include "../headers/major.hpp"
 
-mat4	swp_mat(mat4 m)
-{
-	mat4	o;
-
-	for (int y = 0; y < 4; ++y)
-		for (int x = 0; x < 4; ++x)
-			o.data[x][y] = m.data[y][x];
-	return (m);
-}
-
 void	populate(float buf[16], mat4 m)
 {
 	for (int y = 0; y < 4; ++y)

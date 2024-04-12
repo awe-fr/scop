@@ -4,8 +4,5 @@
 
 class winApp;
 
-mat4	ubo_init(winApp app);
-UniformBufferObject computeMatricesFromInputs(winApp app);
-mat4	getProjectionMatrix();
-mat4	getViewMatrix();
-mat4	getModelMatrix();
+mat4	ubo_init(winApp app, vec3 center);
+UniformBufferObject computeMatricesFromInputs(winApp app, vec3 center);

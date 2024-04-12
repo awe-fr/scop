@@ -30,7 +30,6 @@ mat4    rotate_x(float time, float degree_angle);
 mat4	look_At(vec3 eye, vec3 center, vec3 up);
 mat4    mat_multiplication(mat4 f, mat4 s);
 mat4	init_Base(float value);
-mat4	swp_mat(mat4 m);
 
 vec3	cross(const vec3& a, const vec3& b);
 vec3    vec_multiplication(vec3 f, float s);
