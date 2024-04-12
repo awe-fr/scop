@@ -29,8 +29,9 @@ void	winApp::init() {
 	glfwSetInputMode(this->window, GLFW_STICKY_KEYS, GL_TRUE); // keep key pushed
 
 	this->create_VAO();
+	// this->create_texture_buffer();
+	this->create_color_buffer();
 	this->create_vertex_buffer();
-	this->create_texture_buffer();
 }
 
 int		winApp::is_close() {
@@ -63,7 +64,7 @@ void	winApp::create_color_buffer() {
 void	winApp::create_vertex_buffer() {
 	glGenBuffers(1, &this->vertexbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, this->vertexbuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
+	// glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
 }
 
 void	winApp::create_texture_buffer() {

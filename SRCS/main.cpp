@@ -2,36 +2,23 @@
 
 float   deltaTime;
 
-mat4	swp_mat(mat4 m)
-{
-	mat4	o;
-
-	for (int y = 0; y < 4; ++y)
-		for (int x = 0; x < 4; ++x)
-			o.data[x][y] = m.data[y][x];
-	return (m);
-}
-
-void	populate(float buf[16], mat4 m)
-{
-	for (int y = 0; y < 4; ++y)
-		for (int x = 0; x < 4; ++x)
-			buf[4 * y + x] = m.data[x][y];
-}
-
 int	main(int ac, char **av) {
 	winApp app;
 
-	app.init();
+	std::vector<vec3> vertices;
+	bool res = loadOBJ("./models/42.obj", vertices);
+	long int T = vertices.size();
 
-	GLuint	image = loadDDS("./textures/test4.dds");
+	app.init();
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(vec3), &vertices[0], GL_STATIC_DRAW);
+	// GLuint	image = loadDDS("./textures/test4.dds");
 
 	GLuint programID = LoadShaders( "./shaders/shader.vert", "./shaders/shader.frag" );
 	glClearColor(0.0f, 0.0f, 0.5f, 0.0f);
 	glEnable(GL_DEPTH_TEST);
-	// glDepthFunc(GL_LESS);
-	// glEnable(GL_CULL_FACE);
-	// glCullFace(GL_BACK);
+	glDepthFunc(GL_LESS);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
 
 	while(app.is_close() == 0) {
 		getDeltaTime();
@@ -44,16 +31,16 @@ int	main(int ac, char **av) {
 		glBindBuffer(GL_ARRAY_BUFFER, app.give_vertex_buffer());
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-		glEnableVertexAttribArray(1);
-		glBindBuffer(GL_ARRAY_BUFFER, app.give_texture_buffer());
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+		// glEnableVertexAttribArray(1);
+		// glBindBuffer(GL_ARRAY_BUFFER, app.give_texture_buffer());
+		// glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
 		// glEnableVertexAttribArray(1);
 		// glBindBuffer(GL_ARRAY_BUFFER, app.give_color_buffer());
 		// glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
 		// Draw the triangle !
-		glDrawArrays(GL_TRIANGLES, 0, 12*3); // Starting from vertex 0; 3 vertices total -> 1 triangle
+		glDrawArrays(GL_TRIANGLES, 0, T); // Starting from vertex 0; 3 vertices total -> 1 triangle
 		glDisableVertexAttribArray(0);
 
 		mat4	mvp = ubo_init(app);
@@ -66,7 +53,7 @@ int	main(int ac, char **av) {
 	app.clear();
 }
 
-float getDeltaTime() {
+void getDeltaTime() {
 	static double last = glfwGetTime();
 
 	double now = glfwGetTime();

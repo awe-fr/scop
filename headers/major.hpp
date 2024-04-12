@@ -24,10 +24,12 @@
 const int WIDTH = 800;
 const int HEIGHT = 600;
 
-float   getDeltaTime();
+void	getDeltaTime();
 
-GLuint  LoadShaders(const char * vertex_file_path,const char * fragment_file_path);
+GLuint	LoadShaders(const char * vertex_file_path,const char * fragment_file_path);
+
+bool	loadOBJ(const char* path, std::vector<vec3>& out_vertices);
 
 GLuint	loadDDS(const char *imagepath);
-GLuint  loadBMP_custom(const char * imagepath);
-GLuint  loadTGA(const char *imagepath);
+GLuint 	loadBMP_custom(const char * imagepath);
+GLuint 	loadTGA(const char *imagepath);

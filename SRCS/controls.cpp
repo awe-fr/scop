@@ -50,12 +50,12 @@ mat4	ubo_init(winApp app) {
 
 	// ubo.model = getModelMatrix();
 
-	printf("--- MODEL ---\n");
-	print_mat(ubo.model);
-	printf("--- VIEW ---\n");
-	print_mat(ubo.view);
-	printf("--- PROJ ---\n");
-	print_mat(ubo.proj);
+	// printf("--- MODEL ---\n");
+	// print_mat(ubo.model);
+	// printf("--- VIEW ---\n");
+	// print_mat(ubo.view);
+	// printf("--- PROJ ---\n");
+	// print_mat(ubo.proj);
 
 	mvp = mat_multiplication(ubo.proj, mat_multiplication(ubo.view, ubo.model));
 

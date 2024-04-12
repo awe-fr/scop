@@ -1,5 +1,22 @@
 #include "../headers/major.hpp"
 
+mat4	swp_mat(mat4 m)
+{
+	mat4	o;
+
+	for (int y = 0; y < 4; ++y)
+		for (int x = 0; x < 4; ++x)
+			o.data[x][y] = m.data[y][x];
+	return (m);
+}
+
+void	populate(float buf[16], mat4 m)
+{
+	for (int y = 0; y < 4; ++y)
+		for (int x = 0; x < 4; ++x)
+			buf[4 * y + x] = m.data[x][y];
+}
+
 mat4	rotate_z(float time, float degree_angle) {
 	float angle_radians = degree_angle * M_PI / 180.0f;
 	angle_radians *= time;
@@ -83,7 +100,7 @@ mat4	look_At(vec3 eye, vec3 center, vec3 up) {
 
     matrix.data[0][3] = -dot(r, eye);
     matrix.data[1][3] = -dot(u, eye);
-    matrix.data[2][3] = dot(f, eye); // augmente chelou
+    matrix.data[2][3] = dot(f, eye);
     matrix.data[3][3] = 1;
 
     return matrix;

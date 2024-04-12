@@ -2,10 +2,11 @@ NAME = scop
 
 SRCS = SRCS/main.cpp\
 		SRCS/winApp.cpp\
-		SRCS/loadShader.cpp\
 		SRCS/subMath.cpp\
-		SRCS/textureLoader.cpp\
 		SRCS/controls.cpp\
+		SRCS/loadShader.cpp\
+		SRCS/modelLoader.cpp\
+		SRCS/textureLoader.cpp\
 
 OBJS = $(SRCS:.cpp=.o)
 
