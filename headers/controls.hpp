@@ -4,5 +4,5 @@
 
 class winApp;
 
-mat4	ubo_init(winApp app, vec3 center);
-UniformBufferObject computeMatricesFromInputs(winApp app, vec3 center);
+mat4	ubo_init(winApp app);
+UniformBufferObject computeMatricesFromInputs(winApp app);

@@ -13,8 +13,8 @@
 // #include <glm/glm.hpp>
 // #include <glm/gtc/matrix_transform.hpp>
 
-#include "./winApp.hpp"
 #include "./subMath.hpp"
+#include "./winApp.hpp"
 #include "./controls.hpp"
 
 #define FOURCC_DXT1 0x31545844

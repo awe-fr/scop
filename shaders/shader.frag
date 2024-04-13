@@ -1,11 +1,11 @@
 #version 430 core
 
-in vec2 UV;
+in vec4 UV;
 
-out vec3 color;
+out vec4 color;
 
 uniform sampler2D myTextureSampler;
 
 void main(){
-  color = texture(myTextureSampler, UV).rgb;
+  color = UV;
 }

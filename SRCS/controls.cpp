@@ -10,18 +10,18 @@ void	print_mat(mat4 m)
 		printf("%3.3f %3.3f %3.3f %3.3f\n", m.data[i][0], m.data[i][1], m.data[i][2], m.data[i][3]);
 }
 
-mat4	ubo_init(winApp app, vec3 center) {
+mat4	ubo_init(winApp app) {
 	UniformBufferObject ubo;
 	mat4	mvp;
 
-	ubo = computeMatricesFromInputs(app, center);
+	ubo = computeMatricesFromInputs(app);
 
 	mvp = mat_multiplication(ubo.proj, mat_multiplication(ubo.view, ubo.model));
 
 	return (mvp);
 }
 
-UniformBufferObject	computeMatricesFromInputs(winApp app, vec3 center) {
+UniformBufferObject	computeMatricesFromInputs(winApp app) {
 	UniformBufferObject ubo;
 
 	static auto startTime = std::chrono::high_resolution_clock::now();
