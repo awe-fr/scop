@@ -1,12 +1,13 @@
 #include "../headers/major.hpp"
 
 float   deltaTime;
+float	transValue;
 
 int	main(int ac, char **av) {
 	winApp app;
 
 	std::vector<vec3> vertices;
-	bool res = loadOBJ("./models/teapot.obj", vertices);
+	bool res = loadOBJ("./models/42.obj", vertices);
 	long int T = vertices.size();
 
 	app.init(vertices);
@@ -44,10 +45,12 @@ int	main(int ac, char **av) {
 
 		mat4	mvp = ubo_init(app);
 		GLuint MatrixID = glGetUniformLocation(programID, "MVP");
+		GLuint trans = glGetUniformLocation(programID, "trans");
 
 		float	buf[16] = {0};
 		populate(buf, mvp);
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, buf);
+		glUniform1f(trans, transValue);
 	}
 	app.clear();
 }
