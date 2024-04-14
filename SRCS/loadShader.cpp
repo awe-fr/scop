@@ -15,7 +15,7 @@ GLuint LoadShaders(const char * vertex_file_path,const char * fragment_file_path
 		VertexShaderCode = sstr.str();
 		VertexShaderStream.close();
 	}else{
-		std::cout << "Impossible to open" << vertex_file_path << ". Are you in the right directory ?" << std::endl;
+		std::cout << "Impossible to open" << vertex_file_path << std::endl;
 		exit (1);
 	}
 
@@ -28,7 +28,7 @@ GLuint LoadShaders(const char * vertex_file_path,const char * fragment_file_path
 		FragmentShaderCode = sstr.str();
 		FragmentShaderStream.close();
 	}else{
-		std::cout << "Impossible to open" << fragment_file_path << ". Are you in the right directory ?" << std::endl;
+		std::cout << "Impossible to open" << fragment_file_path << std::endl;
 		exit (1);
 	}
 
@@ -37,7 +37,6 @@ GLuint LoadShaders(const char * vertex_file_path,const char * fragment_file_path
 
 
 	// Compile Vertex Shader
-	std::cout << "Compiling shader : " << vertex_file_path << std::endl;
 	char const * VertexSourcePointer = VertexShaderCode.c_str();
 	glShaderSource(VertexShaderID, 1, &VertexSourcePointer , NULL);
 	glCompileShader(VertexShaderID);
@@ -54,7 +53,6 @@ GLuint LoadShaders(const char * vertex_file_path,const char * fragment_file_path
 
 
 	// Compile Fragment Shader
-	std::cout << "Compiling shader : " << fragment_file_path << std::endl;
 	char const * FragmentSourcePointer = FragmentShaderCode.c_str();
 	glShaderSource(FragmentShaderID, 1, &FragmentSourcePointer , NULL);
 	glCompileShader(FragmentShaderID);
@@ -71,7 +69,6 @@ GLuint LoadShaders(const char * vertex_file_path,const char * fragment_file_path
 
 
 	// Link the program
-	std::cout << "Linking program" << std::endl;
 	GLuint ProgramID = glCreateProgram();
 	glAttachShader(ProgramID, VertexShaderID);
 	glAttachShader(ProgramID, FragmentShaderID);

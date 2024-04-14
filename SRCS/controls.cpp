@@ -3,8 +3,6 @@
 extern float   deltaTime;
 extern float   transValue;
 
-#include <stdio.h>
-
 void	variation(bool updown) {
 	float	value = 0.01;
 	if (updown == true && transValue < 1)
@@ -12,12 +10,6 @@ void	variation(bool updown) {
 	else if (updown == false && transValue > 0)
 		transValue -= value;
 }
-
-// void	print_mat(mat4 m)
-// {
-// 	for (int i = 0; i < 4; ++i)
-// 		printf("%3.3f %3.3f %3.3f %3.3f\n", m.data[i][0], m.data[i][1], m.data[i][2], m.data[i][3]);
-// }
 
 mat4	ubo_init(winApp app) {
 	UniformBufferObject ubo;
@@ -33,6 +25,7 @@ mat4	ubo_init(winApp app) {
 UniformBufferObject	computeMatricesFromInputs(winApp app) {
 	UniformBufferObject ubo;
 
+	//timer
 	static auto startTime = std::chrono::high_resolution_clock::now();
 	auto currentTime = std::chrono::high_resolution_clock::now();
     float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
@@ -83,13 +76,10 @@ UniformBufferObject	computeMatricesFromInputs(winApp app) {
 	}
 	else 
 		pushed = false;
-
 	variation(transitionCursor);
 
 	ubo.proj = perspective(FoV, (double)WIDTH / (double)HEIGHT, 0.1f, 100.0f);
-
 	ubo.view = look_At(position, vec_addition_egal(position, direction), up);
-
 	ubo.model = rotate_y(time, 90);
 
 	return (ubo);

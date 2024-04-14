@@ -10,8 +10,6 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-// #include <glm/glm.hpp>
-// #include <glm/gtc/matrix_transform.hpp>
 
 #include "./subMath.hpp"
 #include "./winApp.hpp"
@@ -24,12 +22,18 @@
 const int WIDTH = 800;
 const int HEIGHT = 600;
 
+/* game stuff */
+
 void	getDeltaTime();
+
+/* shader stuff */
 
 GLuint	LoadShaders(const char * vertex_file_path,const char * fragment_file_path);
 
+/* 3D model parsing*/
+
 bool	loadOBJ(const char* path, std::vector<vec3>& out_vertices);
 
+/* texture parsing */
+
 GLuint	loadDDS(const char *imagepath);
-GLuint 	loadBMP_custom(const char * imagepath);
-GLuint 	loadTGA(const char *imagepath);

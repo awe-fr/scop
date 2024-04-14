@@ -1,7 +1,6 @@
 #include "../headers/winApp.hpp"
 
 void	winApp::init(std::vector<vec3> vertices) {
-	// glewExperimental = true;
 	if (!glfwInit()) {
 		std::cerr << "Failed to initialize GLFW" << std::endl;
 		exit (1);
@@ -20,7 +19,6 @@ void	winApp::init(std::vector<vec3> vertices) {
 		exit (1);
 	}
 	glfwMakeContextCurrent(this->window);
-	// glewExperimental = true;
 	if (glewInit() != GLEW_OK) {
 		std::cerr << "Failed to initialize GLUW" << std::endl;
 		exit (1);
@@ -30,9 +28,29 @@ void	winApp::init(std::vector<vec3> vertices) {
 
 	this->init_color_buffer(vertices);
 	this->create_VAO();
-	// this->create_texture_buffer();
-	// this->create_color_buffer();
+	this->create_texture_buffer(vertices);
 	this->create_vertex_buffer(vertices);
+}
+
+int		winApp::is_close() {
+	if (glfwGetKey(this->window, GLFW_KEY_ESCAPE) == GLFW_PRESS || glfwWindowShouldClose(this->window) != 0)
+		return 1;
+
+	// glClear(GL_COLOR_BUFFER_BIT);
+
+	glfwSwapBuffers(this->window);
+	glfwPollEvents();
+
+	return 0;
+}
+
+void    winApp::clear() {
+	glfwTerminate();
+}
+
+void	winApp::create_VAO() {
+	glGenVertexArrays(1, &this->VertexArrayID);
+	glBindVertexArray(this->VertexArrayID);
 }
 
 void	winApp::init_color_buffer(std::vector<vec3> vertices) {
@@ -64,40 +82,23 @@ void	winApp::init_color_buffer(std::vector<vec3> vertices) {
 	glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data), g_color_buffer_data, GL_STATIC_DRAW);
 }
 
-int		winApp::is_close() {
-	if (glfwGetKey(this->window, GLFW_KEY_ESCAPE) == GLFW_PRESS || glfwWindowShouldClose(this->window) != 0)
-		return 1;
-
-	// glClear(GL_COLOR_BUFFER_BIT);
-
-	glfwSwapBuffers(this->window);
-	glfwPollEvents();
-
-	return 0;
-}
-
-void    winApp::clear() {
-	// glfwTerminate();
-}
-
-void	winApp::create_VAO() {
-	glGenVertexArrays(1, &this->VertexArrayID);
-	glBindVertexArray(this->VertexArrayID);
-}
-
-void	winApp::create_color_buffer(GLfloat *g_color_buffer_data) {
-	glGenBuffers(1, &this->colorbuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, this->colorbuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data), g_color_buffer_data, GL_STATIC_DRAW);
-}
-
 void	winApp::create_vertex_buffer(std::vector<vec3> vertices) {
 	glGenBuffers(1, &this->vertexbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, this->vertexbuffer);
 	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(vec3), &vertices[0], GL_STATIC_DRAW);
 }
 
-void	winApp::create_texture_buffer() {
+void	winApp::create_texture_buffer(std::vector<vec3> vertices) {
+	GLuint	image = loadDDS("./textures/test4.dds");
+	GLfloat g_uv_buffer_data[vertices.size() * 2];
+	int i = 0;
+	int j = 0;
+	while (i < vertices.size() * 2) {
+		g_uv_buffer_data[i] = vertices[j].z * 2;
+		g_uv_buffer_data[i + 1] = vertices[j].y * 2;
+		j++;
+		i += 2;
+	}
 	glGenBuffers(1, &this->texturebuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, this->texturebuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(g_uv_buffer_data), g_uv_buffer_data, GL_STATIC_DRAW);

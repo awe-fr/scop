@@ -11,7 +11,7 @@ int	main(int ac, char **av) {
 	long int T = vertices.size();
 
 	app.init(vertices);
-	// GLuint	image = loadDDS("./textures/test4.dds");
+	
 
 	GLuint programID = LoadShaders( "./shaders/shader.vert", "./shaders/shader.frag" );
 	glClearColor(0.0f, 0.0f, 0.5f, 0.0f);
@@ -27,20 +27,22 @@ int	main(int ac, char **av) {
 
 		glUseProgram(programID);
 
+		//vertex send
 		glEnableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, app.give_vertex_buffer());
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-		// glEnableVertexAttribArray(1);
-		// glBindBuffer(GL_ARRAY_BUFFER, app.give_texture_buffer());
-		// glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+		//texture send
+		glEnableVertexAttribArray(2);
+		glBindBuffer(GL_ARRAY_BUFFER, app.give_texture_buffer());
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
+		//color send
 		glEnableVertexAttribArray(1);
 		glBindBuffer(GL_ARRAY_BUFFER, app.give_color_buffer());
 		glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-		// Draw the triangle !
-		glDrawArrays(GL_TRIANGLES, 0, T); // Starting from vertex 0; 3 vertices total -> 1 triangle
+		glDrawArrays(GL_TRIANGLES, 0, T);
 		glDisableVertexAttribArray(0);
 
 		mat4	mvp = ubo_init(app);

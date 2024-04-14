@@ -41,7 +41,6 @@ bool loadOBJ(const char* path, std::vector<vec3>& out_vertices) {
         }
     }
     fclose(file);
-
     for (unsigned int i = 0; i < vertexIndices.size(); i++) {
         unsigned int vertexIndex = vertexIndices[i];
         vec3 vertex = temp_vertices[vertexIndex - 1];
