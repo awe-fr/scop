@@ -4,10 +4,14 @@ float   deltaTime;
 float	transValue;
 
 int	main(int ac, char **av) {
+	if (ac != 2) {
+		std::cout << "only 1 argument is accepted" << std::endl;
+		exit(1);
+	}
 	winApp app;
 
 	std::vector<vec3> vertices;
-	bool res = loadOBJ("./models/42.obj", vertices);
+	bool res = loadOBJ(av[1], vertices);
 	long int T = vertices.size();
 
 	app.init(vertices);

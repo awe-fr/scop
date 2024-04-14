@@ -19,9 +19,6 @@ all: 		$(NAME)
 $(NAME):	$(OBJS)
 		g++ $(CFLAGS) -o $(NAME) $(SRCS) $(LDFLAGS)
 
-test: 		$(NAME)
-		./$(NAME)
-
 clean:
 		rm -f $(OBJS)
 

@@ -89,13 +89,13 @@ void	winApp::create_vertex_buffer(std::vector<vec3> vertices) {
 }
 
 void	winApp::create_texture_buffer(std::vector<vec3> vertices) {
-	GLuint	image = loadDDS("./textures/test.dds");
+	GLuint	image = loadDDS("./textures/MLP.dds");
 	GLfloat g_uv_buffer_data[vertices.size() * 2];
 	int i = 0;
 	int j = 0;
 	while (i < vertices.size() * 2) {
-		g_uv_buffer_data[i] = vertices[j].z * 2;
-		g_uv_buffer_data[i + 1] = vertices[j].y * 2;
+		g_uv_buffer_data[i] = vertices[j].z;
+		g_uv_buffer_data[i + 1] = vertices[j].y;
 		j++;
 		i += 2;
 	}
