@@ -13,6 +13,7 @@ int	main(int ac, char **av) {
 	std::vector<vec3> vertices;
 	bool res = loadOBJ(av[1], vertices);
 	long int T = vertices.size();
+	vec3 mid = middle(vertices);
 
 	app.init(vertices);
 	
@@ -49,7 +50,7 @@ int	main(int ac, char **av) {
 		glDrawArrays(GL_TRIANGLES, 0, T);
 		glDisableVertexAttribArray(0);
 
-		mat4	mvp = ubo_init(app);
+		mat4	mvp = ubo_init(app, mid);
 		GLuint MatrixID = glGetUniformLocation(programID, "MVP");
 		GLuint trans = glGetUniformLocation(programID, "trans");
 

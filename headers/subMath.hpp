@@ -40,6 +40,7 @@ mat4	init_Base(float value);
 vec3	cross(const vec3& a, const vec3& b);
 vec3    vec_multiplication(vec3 f, float s);
 vec3    vec_substract_egal(vec3 f, vec3 s);
+vec3	middle(std::vector<vec3> vertices);
 vec3    vec_addition_egal(vec3 f, vec3 s);
 vec3	normalize(const vec3& v);
 

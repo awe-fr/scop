@@ -11,19 +11,25 @@ void	variation(bool updown) {
 		transValue -= value;
 }
 
-mat4	ubo_init(winApp app) {
+mat4	ubo_init(winApp app, vec3 mid) {
 	UniformBufferObject ubo;
 	mat4	mvp;
 
-	ubo = computeMatricesFromInputs(app);
+	ubo = computeMatricesFromInputs(app, mid);
 
 	mvp = mat_multiplication(ubo.proj, mat_multiplication(ubo.view, ubo.model));
 
 	return (mvp);
 }
 
-UniformBufferObject	computeMatricesFromInputs(winApp app) {
-	UniformBufferObject ubo;
+UniformBufferObject	computeMatricesFromInputs(winApp app, vec3 mid) {
+	static UniformBufferObject ubo;
+
+	//translation
+	static mat4 trans = init_Base(1);
+	trans.data[0][3] = -mid.x;
+	trans.data[1][3] = -mid.y;
+	trans.data[2][3] = -mid.z;
 
 	//timer
 	static auto startTime = std::chrono::high_resolution_clock::now();
@@ -81,6 +87,7 @@ UniformBufferObject	computeMatricesFromInputs(winApp app) {
 	ubo.proj = perspective(FoV, (double)WIDTH / (double)HEIGHT, 0.1f, 100.0f);
 	ubo.view = look_At(position, vec_addition_egal(position, direction), up);
 	ubo.model = rotate_y(time, 90);
+	ubo.model = mat_multiplication(ubo.model,trans);
 
 	return (ubo);
 }

@@ -7,6 +7,24 @@ void	populate(float buf[16], mat4 m)
 			buf[4 * y + x] = m.data[x][y];
 }
 
+vec3 middle(std::vector<vec3> vertices) {
+	vec3 ret;
+	ret.x = 0; 
+	ret.y = 0; 
+	ret.z = 0; 
+	int i = 0;
+	while (i < vertices.size()) {
+		ret.x += vertices[i].x;
+		ret.y += vertices[i].y;
+		ret.z += vertices[i].z;
+		i++;
+	}
+	ret.x /= i; 
+	ret.y /= i; 
+	ret.z /= i;
+	return ret; 
+}
+
 mat4	rotate_z(float time, float degree_angle) {
 	float angle_radians = degree_angle * M_PI / 180.0f;
 	angle_radians *= time;
