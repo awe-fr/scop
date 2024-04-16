@@ -10,7 +10,7 @@ SRCS = SRCS/main.cpp\
 
 OBJS = $(SRCS:.cpp=.o)
 
-CFLAGS = 
+CFLAGS = -Wall -Wextra -Werror
 
 LDFLAGS = -Iinclude -Llib -lglfw -lGLEW -lGL -lX11 -lpthread -lXrandr -lXi -ldl -D GLEW_STATIC
 

@@ -12,7 +12,7 @@ vec3 middle(std::vector<vec3> vertices) {
 	ret.x = 0; 
 	ret.y = 0; 
 	ret.z = 0; 
-	int i = 0;
+	unsigned long int i = 0;
 	while (i < vertices.size()) {
 		ret.x += vertices[i].x;
 		ret.y += vertices[i].y;

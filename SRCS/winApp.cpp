@@ -55,7 +55,7 @@ void	winApp::create_VAO() {
 
 void	winApp::init_color_buffer(std::vector<vec3> vertices) {
 	GLfloat g_color_buffer_data[vertices.size() * 4];
-	int i = 0;
+	unsigned long int i = 0;
 	while (i < vertices.size() * 4) {
 		if (i  % 36 < 12) {
 			g_color_buffer_data[i] = 0.1f;
@@ -89,9 +89,9 @@ void	winApp::create_vertex_buffer(std::vector<vec3> vertices) {
 }
 
 void	winApp::create_texture_buffer(std::vector<vec3> vertices) {
-	GLuint	image = loadDDS("./textures/MLP.dds");
+	loadDDS("./textures/MLP.dds");
 	GLfloat g_uv_buffer_data[vertices.size() * 2];
-	int i = 0;
+	unsigned long int i = 0;
 	int j = 0;
 	while (i < vertices.size() * 2) {
 		g_uv_buffer_data[i] = vertices[j].z;

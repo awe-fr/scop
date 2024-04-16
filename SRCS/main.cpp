@@ -11,7 +11,7 @@ int	main(int ac, char **av) {
 	winApp app;
 
 	std::vector<vec3> vertices;
-	bool res = loadOBJ(av[1], vertices);
+	loadOBJ(av[1], vertices);
 	long int T = vertices.size();
 	vec3 mid = middle(vertices);
 
