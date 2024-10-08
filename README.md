@@ -4,6 +4,11 @@
 
 This project is a simple 3D object viewer built using ```C++``` and ```OpenGL```. The main goal is to display a 3D model from an ```.obj``` file, rendered with perspective, and to implement various interactions such as rotating around the object, moving along different axes, and applying a texture.
 
+<p align="center">
+  <img src="screen/scop.jpg" alt="Image 1" width="270"/>
+</p>
+
+
 ### Features
 
    - **3D Object Rendering :** The program loads and parses ```.obj``` files to render 3D objects in a window.
